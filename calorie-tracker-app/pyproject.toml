@@ -1,0 +1,22 @@
+[project]
+name = "calorie-tracker-app"
+version = "0.1.0"
+description = "AI-powered nutrition & calorie tracker using Streamlit and Groq"
+authors = [{name = "Your Name", email = "you@example.com"}]
+dependencies = [
+    "streamlit>=1.28.0",
+    "pandas>=2.0.0",
+    "numpy>=1.24.0",
+    "plotly>=5.17.0",
+    "groq>=0.4.0",
+    "python-dotenv>=1.0.0",
+    "langchain>=0.1.0",
+    "langchain-groq>=0.1.0",
+    "requests>=2.31.0",
+]
+
+[tool.uv]
+
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
