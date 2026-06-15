@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Book RAG Curator</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <main class="shell">
+      <section class="hero">
+        <div>
+          <p class="eyebrow">Weekly personal curator</p>
+          <h1>Book RAG</h1>
+          <p class="subhead">Recommendations shaped by your reading memory, taste profile, and feedback loop.</p>
+        </div>
+        <div class="hero-stats">
+          <div><span id="cardCount">0</span><small>cards</small></div>
+          <div><span>6</span><small>modules</small></div>
+        </div>
+      </section>
+
+      <section class="layout">
+        <div class="recommendations">
+          <div class="section-head">
+            <div>
+              <h2>This Week</h2>
+              <p id="modeText">Loading recommendations...</p>
+            </div>
+            <div class="toolbar">
+              <select id="moduleFilter" title="Module filter">
+                <option value="">All modules</option>
+                <option value="autobiography_memoir">Autobiography</option>
+                <option value="self_help_personal_growth">Self-help</option>
+                <option value="technical">Technical</option>
+                <option value="poetry_reflective_writing">Poetry</option>
+                <option value="philosophy">Philosophy</option>
+                <option value="spirituality">Spirituality</option>
+              </select>
+              <button id="refreshBtn" class="icon-btn" title="Refresh">↻</button>
+            </div>
+          </div>
+          <div id="cards" class="grid"></div>
+        </div>
+
+        <aside class="chat">
+          <div class="chat-head">
+            <h2>Curator Chat</h2>
+            <p>Ask about your taste, modules, or book matches.</p>
+          </div>
+          <div id="messages" class="messages">
+            <div class="message assistant">Hi Roja. I can search your local reading memory and explain recommendation signals.</div>
+          </div>
+          <form id="chatForm" class="chat-form">
+            <input id="chatInput" type="text" placeholder="Ask about philosophy, spirituality, Deep Work..." autocomplete="off" />
+            <button type="submit">Send</button>
+          </form>
+          <div class="history">
+            <h3>Recent Feedback</h3>
+            <div id="feedbackHistory"></div>
+          </div>
+        </aside>
+      </section>
+    </main>
+    <script src="/app.js"></script>
+  </body>
+</html>
