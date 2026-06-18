@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Healthcare Case Review</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <main class="shell">
+      <section class="topbar">
+        <div>
+          <p class="eyebrow">Agentic Healthcare Pipeline</p>
+          <h1>Case Review Decisions</h1>
+        </div>
+        <div class="summary" id="summary"></div>
+      </section>
+
+      <section class="controls" aria-label="Dashboard controls">
+        <label>
+          <span>Search</span>
+          <input id="searchInput" type="search" placeholder="Case, concern, service, diagnosis">
+        </label>
+        <label>
+          <span>Decision</span>
+          <select id="decisionFilter">
+            <option value="all">All decisions</option>
+            <option value="Urgent Review">Urgent Review</option>
+            <option value="Needs Follow-Up">Needs Follow-Up</option>
+            <option value="Routine">Routine</option>
+            <option value="Insufficient Data">Insufficient Data</option>
+          </select>
+        </label>
+        <label>
+          <span>Reviewer</span>
+          <select id="reviewFilter">
+            <option value="all">All routes</option>
+            <option value="required">Human review</option>
+            <option value="not_required">No human review</option>
+          </select>
+        </label>
+      </section>
+
+      <section class="layout">
+        <aside class="case-list" aria-label="Cases">
+          <div class="list-header">
+            <h2>Cases</h2>
+            <span id="caseCount"></span>
+          </div>
+          <div id="caseList"></div>
+        </aside>
+
+        <section class="detail" id="caseDetail" aria-live="polite">
+          <div class="empty-state">Loading decisions...</div>
+        </section>
+      </section>
+    </main>
+    <script src="app.js"></script>
+  </body>
+</html>

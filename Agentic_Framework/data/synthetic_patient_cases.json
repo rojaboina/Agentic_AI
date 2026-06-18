@@ -1,0 +1,628 @@
+[
+  {
+    "case_id": "HC-001",
+    "synthetic": true,
+    "patient_age": 67,
+    "sex": "female",
+    "chief_concern": "Shortness of breath and leg swelling",
+    "diagnoses": ["heart failure", "hypertension", "type 2 diabetes"],
+    "medications": ["lisinopril", "furosemide", "metformin"],
+    "allergies": ["penicillin"],
+    "lab_results": {
+      "a1c": 7.8,
+      "creatinine": 1.4,
+      "potassium": 5.2,
+      "bnp": 620
+    },
+    "vitals": {
+      "systolic_bp": 154,
+      "diastolic_bp": 88,
+      "heart_rate": 96,
+      "oxygen_saturation": 93
+    },
+    "recent_visits": ["ED visit for dyspnea 18 days ago"],
+    "requested_service": "cardiology follow-up",
+    "clinical_note": "Patient reports worsening dyspnea on exertion and bilateral leg swelling over one week. History of heart failure and diabetes. Recently seen in ED for similar symptoms. Mild hyperkalemia noted.",
+    "expected_triggers": ["high readmission risk", "abnormal potassium", "recent ED visit"],
+    "expected_human_review": true
+  },
+  {
+    "case_id": "HC-002",
+    "synthetic": true,
+    "patient_age": 45,
+    "sex": "male",
+    "chief_concern": "Routine diabetes follow-up",
+    "diagnoses": ["type 2 diabetes", "hyperlipidemia"],
+    "medications": ["metformin", "atorvastatin"],
+    "allergies": [],
+    "lab_results": {
+      "a1c": 6.9,
+      "ldl": 92,
+      "creatinine": 0.9
+    },
+    "vitals": {
+      "systolic_bp": 126,
+      "diastolic_bp": 78,
+      "heart_rate": 72,
+      "oxygen_saturation": 98
+    },
+    "recent_visits": ["primary care visit 6 months ago"],
+    "requested_service": "routine primary care follow-up",
+    "clinical_note": "Patient presents for routine diabetes follow-up. A1c improved from prior value. No hypoglycemia reported. Medication adherence is good.",
+    "expected_triggers": ["routine follow-up", "diabetes monitoring"],
+    "expected_human_review": false
+  },
+  {
+    "case_id": "HC-003",
+    "synthetic": true,
+    "patient_age": 72,
+    "sex": "female",
+    "chief_concern": "Medication review after fall",
+    "diagnoses": ["insomnia", "anxiety", "osteoporosis"],
+    "medications": ["zolpidem", "alprazolam", "alendronate"],
+    "allergies": ["sulfa"],
+    "lab_results": {
+      "creatinine": 1.0,
+      "vitamin_d": 18
+    },
+    "vitals": {
+      "systolic_bp": 118,
+      "diastolic_bp": 70,
+      "heart_rate": 68,
+      "oxygen_saturation": 97
+    },
+    "recent_visits": ["urgent care visit for fall 4 days ago"],
+    "requested_service": "medication safety review",
+    "clinical_note": "Older adult with recent fall. Medication list includes sedative-hypnotic and benzodiazepine. Vitamin D is low. No fracture noted on urgent care imaging.",
+    "expected_triggers": ["fall risk", "high-risk medication in older adult", "medication safety review"],
+    "expected_human_review": true
+  },
+  {
+    "case_id": "HC-004",
+    "synthetic": true,
+    "patient_age": 29,
+    "sex": "female",
+    "chief_concern": "Migraine prior authorization request",
+    "diagnoses": ["chronic migraine"],
+    "medications": ["topiramate", "sumatriptan"],
+    "allergies": [],
+    "lab_results": {},
+    "vitals": {
+      "systolic_bp": 112,
+      "diastolic_bp": 72,
+      "heart_rate": 74,
+      "oxygen_saturation": 99
+    },
+    "recent_visits": ["neurology visit 1 month ago"],
+    "requested_service": "CGRP inhibitor prior authorization",
+    "clinical_note": "Patient has chronic migraine with 16 headache days per month. Failed topiramate due to cognitive side effects and has incomplete relief with sumatriptan.",
+    "expected_triggers": ["prior authorization criteria review", "failed first-line therapy"],
+    "expected_human_review": false
+  },
+  {
+    "case_id": "HC-005",
+    "synthetic": true,
+    "patient_age": 58,
+    "sex": "male",
+    "chief_concern": "Chest discomfort",
+    "diagnoses": ["coronary artery disease", "hypertension"],
+    "medications": ["aspirin", "metoprolol", "atorvastatin"],
+    "allergies": [],
+    "lab_results": {
+      "troponin": 0.08,
+      "ldl": 118,
+      "creatinine": 1.1
+    },
+    "vitals": {
+      "systolic_bp": 162,
+      "diastolic_bp": 94,
+      "heart_rate": 104,
+      "oxygen_saturation": 96
+    },
+    "recent_visits": ["no recent cardiology follow-up"],
+    "requested_service": "urgent cardiology review",
+    "clinical_note": "Patient reports intermittent chest pressure with exertion for three days. Troponin mildly elevated. Blood pressure elevated and heart rate above baseline.",
+    "expected_triggers": ["urgent cardiac red flag", "abnormal troponin", "high-risk symptoms"],
+    "expected_human_review": true
+  },
+  {
+    "case_id": "HC-006",
+    "synthetic": true,
+    "patient_age": 34,
+    "sex": "male",
+    "chief_concern": "Asthma control visit",
+    "diagnoses": ["asthma", "seasonal allergies"],
+    "medications": ["albuterol inhaler", "fluticasone inhaler", "cetirizine"],
+    "allergies": ["peanut"],
+    "lab_results": {},
+    "vitals": {
+      "systolic_bp": 120,
+      "diastolic_bp": 76,
+      "heart_rate": 82,
+      "oxygen_saturation": 98
+    },
+    "recent_visits": ["ED visit for wheezing 3 months ago"],
+    "requested_service": "asthma action plan review",
+    "clinical_note": "Patient uses albuterol several times per week and reports nighttime cough twice weekly. Currently prescribed inhaled corticosteroid but adherence is inconsistent.",
+    "expected_triggers": ["asthma control gap", "medication adherence issue"],
+    "expected_human_review": false
+  },
+  {
+    "case_id": "HC-007",
+    "synthetic": true,
+    "patient_age": 81,
+    "sex": "female",
+    "chief_concern": "Confusion and urinary symptoms",
+    "diagnoses": ["chronic kidney disease", "recurrent urinary tract infection", "mild cognitive impairment"],
+    "medications": ["nitrofurantoin", "donepezil", "amlodipine"],
+    "allergies": ["ciprofloxacin"],
+    "lab_results": {
+      "creatinine": 2.1,
+      "egfr": 28,
+      "wbc": 13.2
+    },
+    "vitals": {
+      "systolic_bp": 138,
+      "diastolic_bp": 82,
+      "heart_rate": 102,
+      "oxygen_saturation": 95
+    },
+    "recent_visits": ["primary care visit for UTI 2 days ago"],
+    "requested_service": "urgent medication and infection review",
+    "clinical_note": "Older adult with CKD and confusion. Started on nitrofurantoin for suspected UTI despite low eGFR. Leukocytosis present and family reports worsening confusion.",
+    "expected_triggers": ["renal dosing concern", "infection risk", "acute confusion", "medication safety issue"],
+    "expected_human_review": true
+  },
+  {
+    "case_id": "HC-008",
+    "synthetic": true,
+    "patient_age": 52,
+    "sex": "female",
+    "chief_concern": "Preventive care gap review",
+    "diagnoses": ["hypertension"],
+    "medications": ["losartan"],
+    "allergies": [],
+    "lab_results": {
+      "ldl": 104,
+      "creatinine": 0.8
+    },
+    "vitals": {
+      "systolic_bp": 132,
+      "diastolic_bp": 80,
+      "heart_rate": 70,
+      "oxygen_saturation": 99
+    },
+    "recent_visits": ["annual wellness visit scheduled"],
+    "requested_service": "care gap review",
+    "clinical_note": "Patient is due for breast cancer screening and colorectal cancer screening. Blood pressure is near goal on current therapy.",
+    "expected_triggers": ["preventive screening due", "care gap"],
+    "expected_human_review": false
+  },
+  {
+    "case_id": "HC-009",
+    "synthetic": true,
+    "patient_age": 6,
+    "sex": "male",
+    "chief_concern": "Fever and ear pain",
+    "diagnoses": ["recurrent otitis media"],
+    "medications": ["acetaminophen"],
+    "allergies": ["amoxicillin"],
+    "lab_results": {
+      "temperature_f": 102.1
+    },
+    "vitals": {
+      "systolic_bp": 96,
+      "diastolic_bp": 58,
+      "heart_rate": 118,
+      "oxygen_saturation": 99
+    },
+    "recent_visits": ["pediatric urgent visit for ear infection 7 weeks ago"],
+    "requested_service": "pediatric same-day visit",
+    "clinical_note": "Child has fever, right ear pain, and reduced sleep for two days. Parent reports prior ear infection and listed amoxicillin allergy.",
+    "expected_triggers": ["pediatric infection review", "antibiotic allergy consideration"],
+    "expected_human_review": false
+  },
+  {
+    "case_id": "HC-010",
+    "synthetic": true,
+    "patient_age": 32,
+    "sex": "female",
+    "chief_concern": "Pregnancy with elevated blood pressure",
+    "diagnoses": ["pregnancy", "gestational hypertension"],
+    "medications": ["prenatal vitamin"],
+    "allergies": [],
+    "lab_results": {
+      "protein_creatinine_ratio": 0.42,
+      "platelets": 142,
+      "ast": 48,
+      "alt": 52
+    },
+    "vitals": {
+      "systolic_bp": 156,
+      "diastolic_bp": 98,
+      "heart_rate": 92,
+      "oxygen_saturation": 98
+    },
+    "recent_visits": ["obstetrics visit 5 days ago"],
+    "requested_service": "urgent obstetric review",
+    "clinical_note": "Pregnant patient at 34 weeks reports headache and new swelling. Blood pressure is elevated with proteinuria and mildly elevated liver enzymes.",
+    "expected_triggers": ["pregnancy red flag", "possible preeclampsia", "urgent human review"],
+    "expected_human_review": true
+  },
+  {
+    "case_id": "HC-011",
+    "synthetic": true,
+    "patient_age": 41,
+    "sex": "male",
+    "chief_concern": "Depression follow-up",
+    "diagnoses": ["major depressive disorder", "generalized anxiety disorder"],
+    "medications": ["sertraline"],
+    "allergies": [],
+    "lab_results": {
+      "phq9": 19,
+      "gad7": 15
+    },
+    "vitals": {
+      "systolic_bp": 124,
+      "diastolic_bp": 80,
+      "heart_rate": 78,
+      "oxygen_saturation": 98
+    },
+    "recent_visits": ["behavioral health intake 3 weeks ago"],
+    "requested_service": "behavioral health follow-up",
+    "clinical_note": "Patient reports persistent low mood, insomnia, and difficulty working. Screening scores remain elevated. Patient denies current self-harm intent in the note.",
+    "expected_triggers": ["behavioral health severity review", "symptom monitoring"],
+    "expected_human_review": false
+  },
+  {
+    "case_id": "HC-012",
+    "synthetic": true,
+    "patient_age": 63,
+    "sex": "female",
+    "chief_concern": "Chemotherapy fever",
+    "diagnoses": ["breast cancer", "chemotherapy-induced neutropenia"],
+    "medications": ["paclitaxel", "ondansetron"],
+    "allergies": [],
+    "lab_results": {
+      "temperature_f": 101.8,
+      "absolute_neutrophil_count": 420,
+      "wbc": 1.9
+    },
+    "vitals": {
+      "systolic_bp": 104,
+      "diastolic_bp": 66,
+      "heart_rate": 116,
+      "oxygen_saturation": 96
+    },
+    "recent_visits": ["chemotherapy infusion 6 days ago"],
+    "requested_service": "urgent oncology triage",
+    "clinical_note": "Patient receiving chemotherapy reports fever and chills. Absolute neutrophil count is low with tachycardia.",
+    "expected_triggers": ["oncology red flag", "neutropenic fever risk", "urgent human review"],
+    "expected_human_review": true
+  },
+  {
+    "case_id": "HC-013",
+    "synthetic": true,
+    "patient_age": 76,
+    "sex": "male",
+    "chief_concern": "Warfarin monitoring",
+    "diagnoses": ["atrial fibrillation", "history of stroke"],
+    "medications": ["warfarin", "metoprolol"],
+    "allergies": [],
+    "lab_results": {
+      "inr": 4.8,
+      "hemoglobin": 11.2,
+      "creatinine": 1.2
+    },
+    "vitals": {
+      "systolic_bp": 130,
+      "diastolic_bp": 76,
+      "heart_rate": 84,
+      "oxygen_saturation": 97
+    },
+    "recent_visits": ["anticoagulation clinic visit 1 week ago"],
+    "requested_service": "anticoagulation safety review",
+    "clinical_note": "Patient on warfarin has supratherapeutic INR and reports new bruising. No active bleeding documented.",
+    "expected_triggers": ["high-risk medication", "supratherapeutic INR", "bleeding risk"],
+    "expected_human_review": true
+  },
+  {
+    "case_id": "HC-014",
+    "synthetic": true,
+    "patient_age": 59,
+    "sex": "female",
+    "chief_concern": "COPD flare",
+    "diagnoses": ["copd", "tobacco use disorder"],
+    "medications": ["tiotropium", "albuterol inhaler"],
+    "allergies": [],
+    "lab_results": {
+      "wbc": 10.8
+    },
+    "vitals": {
+      "systolic_bp": 142,
+      "diastolic_bp": 86,
+      "heart_rate": 108,
+      "oxygen_saturation": 89
+    },
+    "recent_visits": ["ED visit for COPD exacerbation 2 months ago"],
+    "requested_service": "pulmonary triage",
+    "clinical_note": "Patient reports increased shortness of breath, sputum, and frequent albuterol use. Oxygen saturation is below baseline.",
+    "expected_triggers": ["low oxygen saturation", "copd exacerbation", "urgent respiratory review"],
+    "expected_human_review": true
+  },
+  {
+    "case_id": "HC-015",
+    "synthetic": true,
+    "patient_age": 48,
+    "sex": "male",
+    "chief_concern": "Sleep apnea equipment renewal",
+    "diagnoses": ["obstructive sleep apnea", "obesity"],
+    "medications": [],
+    "allergies": [],
+    "lab_results": {
+      "bmi": 36.4,
+      "ahi": 28.0
+    },
+    "vitals": {
+      "systolic_bp": 136,
+      "diastolic_bp": 84,
+      "heart_rate": 76,
+      "oxygen_saturation": 96
+    },
+    "recent_visits": ["sleep medicine visit 11 months ago"],
+    "requested_service": "CPAP supply renewal",
+    "clinical_note": "Patient uses CPAP most nights and reports improved daytime sleepiness. Device download shows good adherence in the note.",
+    "expected_triggers": ["durable medical equipment review", "adherence documentation"],
+    "expected_human_review": false
+  },
+  {
+    "case_id": "HC-016",
+    "synthetic": true,
+    "patient_age": 66,
+    "sex": "male",
+    "chief_concern": "Diabetic foot wound",
+    "diagnoses": ["type 2 diabetes", "peripheral neuropathy", "chronic kidney disease"],
+    "medications": ["insulin glargine", "gabapentin", "losartan"],
+    "allergies": [],
+    "lab_results": {
+      "a1c": 9.4,
+      "creatinine": 1.8,
+      "wbc": 12.4,
+      "c_reactive_protein": 42.0
+    },
+    "vitals": {
+      "systolic_bp": 148,
+      "diastolic_bp": 86,
+      "heart_rate": 98,
+      "oxygen_saturation": 97
+    },
+    "recent_visits": ["wound clinic visit 10 days ago"],
+    "requested_service": "urgent wound care review",
+    "clinical_note": "Patient has worsening plantar foot ulcer with drainage and increased redness. Diabetes control is poor and inflammatory markers are elevated.",
+    "expected_triggers": ["diabetic foot infection risk", "poor glycemic control", "urgent human review"],
+    "expected_human_review": true
+  },
+  {
+    "case_id": "HC-017",
+    "synthetic": true,
+    "patient_age": 24,
+    "sex": "female",
+    "chief_concern": "Acne medication request",
+    "diagnoses": ["moderate acne"],
+    "medications": ["benzoyl peroxide", "doxycycline"],
+    "allergies": [],
+    "lab_results": {},
+    "vitals": {
+      "systolic_bp": 108,
+      "diastolic_bp": 68,
+      "heart_rate": 70,
+      "oxygen_saturation": 99
+    },
+    "recent_visits": ["dermatology visit 2 months ago"],
+    "requested_service": "isotretinoin eligibility review",
+    "clinical_note": "Patient requests escalation for persistent acne after topical therapy and oral doxycycline. Documentation mentions counseling needs before isotretinoin.",
+    "expected_triggers": ["specialty medication criteria review", "safety monitoring requirement"],
+    "expected_human_review": false
+  },
+  {
+    "case_id": "HC-018",
+    "synthetic": true,
+    "patient_age": 70,
+    "sex": "female",
+    "chief_concern": "Anemia and fatigue",
+    "diagnoses": ["iron deficiency anemia", "osteoarthritis"],
+    "medications": ["ibuprofen", "ferrous sulfate"],
+    "allergies": [],
+    "lab_results": {
+      "hemoglobin": 8.7,
+      "ferritin": 8.0,
+      "creatinine": 1.0
+    },
+    "vitals": {
+      "systolic_bp": 116,
+      "diastolic_bp": 68,
+      "heart_rate": 96,
+      "oxygen_saturation": 97
+    },
+    "recent_visits": ["primary care visit 2 weeks ago"],
+    "requested_service": "gastroenterology referral review",
+    "clinical_note": "Older adult reports progressive fatigue and dark stools while using ibuprofen frequently. Hemoglobin and ferritin are low.",
+    "expected_triggers": ["possible GI bleeding", "severe anemia", "high-risk medication use"],
+    "expected_human_review": true
+  },
+  {
+    "case_id": "HC-019",
+    "synthetic": true,
+    "patient_age": 55,
+    "sex": "male",
+    "chief_concern": "Abnormal liver tests",
+    "diagnoses": ["alcohol use disorder", "fatty liver disease"],
+    "medications": ["naltrexone"],
+    "allergies": [],
+    "lab_results": {
+      "ast": 118,
+      "alt": 96,
+      "bilirubin": 1.6,
+      "platelets": 128
+    },
+    "vitals": {
+      "systolic_bp": 138,
+      "diastolic_bp": 84,
+      "heart_rate": 88,
+      "oxygen_saturation": 98
+    },
+    "recent_visits": ["primary care visit for alcohol reduction 1 month ago"],
+    "requested_service": "hepatology referral review",
+    "clinical_note": "Patient has rising liver enzymes and mild thrombocytopenia. Reports reduced alcohol intake but continued intermittent use.",
+    "expected_triggers": ["abnormal liver markers", "specialist referral review"],
+    "expected_human_review": false
+  },
+  {
+    "case_id": "HC-020",
+    "synthetic": true,
+    "patient_age": 13,
+    "sex": "female",
+    "chief_concern": "Sports clearance after fainting",
+    "diagnoses": ["syncope"],
+    "medications": [],
+    "allergies": [],
+    "lab_results": {
+      "hemoglobin": 12.4
+    },
+    "vitals": {
+      "systolic_bp": 104,
+      "diastolic_bp": 62,
+      "heart_rate": 64,
+      "oxygen_saturation": 99
+    },
+    "recent_visits": ["school nurse evaluation yesterday"],
+    "requested_service": "sports physical clearance",
+    "clinical_note": "Teen athlete fainted during practice. Note mentions palpitations before the event and a family history of sudden cardiac death.",
+    "expected_triggers": ["pediatric cardiac red flag", "sports clearance concern", "urgent human review"],
+    "expected_human_review": true
+  },
+  {
+    "case_id": "HC-021",
+    "synthetic": true,
+    "patient_age": 61,
+    "sex": "female",
+    "chief_concern": "Post-operative wound concern",
+    "diagnoses": ["knee replacement", "hypertension"],
+    "medications": ["apixaban", "acetaminophen", "amlodipine"],
+    "allergies": ["codeine"],
+    "lab_results": {
+      "wbc": 11.9,
+      "hemoglobin": 10.9
+    },
+    "vitals": {
+      "systolic_bp": 128,
+      "diastolic_bp": 74,
+      "heart_rate": 101,
+      "oxygen_saturation": 96
+    },
+    "recent_visits": ["knee replacement surgery 9 days ago"],
+    "requested_service": "orthopedic post-op review",
+    "clinical_note": "Patient reports increased knee redness, warmth, and drainage after surgery. Currently taking apixaban for post-operative clot prevention.",
+    "expected_triggers": ["post-operative infection risk", "anticoagulation consideration", "urgent human review"],
+    "expected_human_review": true
+  },
+  {
+    "case_id": "HC-022",
+    "synthetic": true,
+    "patient_age": 38,
+    "sex": "male",
+    "chief_concern": "Hypertension medication adjustment",
+    "diagnoses": ["hypertension"],
+    "medications": ["hydrochlorothiazide"],
+    "allergies": [],
+    "lab_results": {
+      "potassium": 3.2,
+      "creatinine": 0.9
+    },
+    "vitals": {
+      "systolic_bp": 150,
+      "diastolic_bp": 92,
+      "heart_rate": 74,
+      "oxygen_saturation": 99
+    },
+    "recent_visits": ["primary care visit 1 month ago"],
+    "requested_service": "blood pressure medication review",
+    "clinical_note": "Patient has persistent elevated home blood pressures and mild hypokalemia while taking hydrochlorothiazide.",
+    "expected_triggers": ["hypertension control gap", "electrolyte abnormality"],
+    "expected_human_review": false
+  },
+  {
+    "case_id": "HC-023",
+    "synthetic": true,
+    "patient_age": 46,
+    "sex": "female",
+    "chief_concern": "Opioid refill request",
+    "diagnoses": ["chronic low back pain", "opioid use risk"],
+    "medications": ["oxycodone", "cyclobenzaprine"],
+    "allergies": [],
+    "lab_results": {
+      "pain_score": 8.0
+    },
+    "vitals": {
+      "systolic_bp": 122,
+      "diastolic_bp": 78,
+      "heart_rate": 82,
+      "oxygen_saturation": 98
+    },
+    "recent_visits": ["missed pain clinic appointment 2 weeks ago"],
+    "requested_service": "controlled substance refill review",
+    "clinical_note": "Patient requests early opioid refill after missed appointment. Medication list includes opioid and muscle relaxant. Prior note mentions need for updated treatment agreement.",
+    "expected_triggers": ["controlled substance safety review", "early refill", "care agreement gap"],
+    "expected_human_review": true
+  },
+  {
+    "case_id": "HC-024",
+    "synthetic": true,
+    "patient_age": 50,
+    "sex": "female",
+    "chief_concern": "Breast imaging follow-up",
+    "diagnoses": ["abnormal mammogram"],
+    "medications": ["levothyroxine"],
+    "allergies": [],
+    "lab_results": {
+      "tsh": 2.1
+    },
+    "vitals": {
+      "systolic_bp": 118,
+      "diastolic_bp": 76,
+      "heart_rate": 72,
+      "oxygen_saturation": 99
+    },
+    "recent_visits": ["screening mammogram 3 weeks ago"],
+    "requested_service": "diagnostic breast imaging scheduling",
+    "clinical_note": "Screening mammogram requires diagnostic follow-up. Patient has not yet scheduled additional imaging.",
+    "expected_triggers": ["abnormal screening follow-up", "care gap"],
+    "expected_human_review": false
+  },
+  {
+    "case_id": "HC-025",
+    "synthetic": true,
+    "patient_age": 44,
+    "sex": "male",
+    "chief_concern": "Missed appointments and medication access",
+    "diagnoses": ["type 2 diabetes", "hypertension", "housing instability"],
+    "medications": ["metformin", "lisinopril"],
+    "allergies": [],
+    "lab_results": {
+      "a1c": 10.8,
+      "creatinine": 1.3,
+      "ldl": 134
+    },
+    "vitals": {
+      "systolic_bp": 158,
+      "diastolic_bp": 96,
+      "heart_rate": 90,
+      "oxygen_saturation": 98
+    },
+    "recent_visits": ["missed primary care visits twice in 4 months"],
+    "requested_service": "care management referral",
+    "clinical_note": "Patient has uncontrolled diabetes and hypertension with gaps in medication access. Note describes transportation barriers and housing instability.",
+    "expected_triggers": ["social needs risk", "poor chronic disease control", "care management referral"],
+    "expected_human_review": true
+  }
+]
