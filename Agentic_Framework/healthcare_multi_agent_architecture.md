@@ -193,6 +193,7 @@ Pure Python rules engine
 Tool functions for risk scoring
 LLM agents for interpretation
 Human-in-the-loop review
+Mem0 or local JSON memory
 Checkpointing / audit logs
 Markdown or PDF report output
 ```
@@ -225,8 +226,13 @@ deterministic          deterministic            numeric risk scores
         +----------------------+------------------------+
                                |
                                v
+Memory Retrieval
+Mem0 if configured, local JSON fallback
+prior similar decisions and reviewer patterns
+                               |
+                               v
 Specialist Agents
-LLM if OPENAI_API_KEY exists, deterministic fallback otherwise
+LLM if provider key exists, deterministic fallback otherwise
         |
         +--> Clinical Risk Agent
         +--> Medication Safety Agent
@@ -242,6 +248,10 @@ Panel Decision
 deterministic decision + optional LLM decision + panel guardrails
         |
         v
+Memory Write
+store final case pattern, risk signals, route, and panel decision
+        |
+        v
 Final Case Decision JSON
         |
         v
@@ -251,7 +261,7 @@ Dashboard API /api/cases
 Browser UI Dashboard
 case list, decision trail, risk scores, routing, agent outputs
 
-.env provides optional OPENAI_API_KEY for LLM nodes.
+.env provides optional GROQ_API_KEY, OPENAI_API_KEY, or MEM0_API_KEY.
 .gitignore protects .env from being committed.
 ```
 
@@ -265,9 +275,12 @@ case list, decision trail, risk scores, routing, agent outputs
 4. Run clinical risk analysis.
 5. Run medication safety analysis.
 6. Run tool-based risk scoring.
-7. Synthesize all specialist outputs.
-8. Escalate to human clinician if needed.
-9. Generate auditable care summary.
+7. Retrieve relevant prior case memory.
+8. Run LLM specialist agents with current case context plus retrieved memory.
+9. Escalate to human clinician if needed.
+10. Generate the panel decision.
+11. Store the finalized case pattern back into memory.
+12. Generate auditable care summary.
 ```
 
 ## Design Decisions
@@ -291,6 +304,15 @@ Risk scores should come from explicit functions or validated models, not free-fo
 ### Human-in-the-Loop for Safety
 
 High-risk, low-confidence, or safety-critical cases should pause for clinician review.
+
+### Memory as Advisory Context
+
+Memory is used to recall prior case patterns, reviewer preferences, and finalized decisions. It does not replace current case data, deterministic safety checks, or panel guardrails.
+
+The implementation supports:
+
+- `MEMORY_PROVIDER=local` for a demo-friendly JSON memory store
+- `MEMORY_PROVIDER=mem0` for Mem0-backed long-term memory when `MEM0_API_KEY` is configured
 
 ### Auditability
 

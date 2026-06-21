@@ -1,7 +1,7 @@
 const state = {
-  cases: [],
-  filtered: [],
+  caseIndex: [],
   selectedId: null,
+  selectedCase: null,
 };
 
 const decisionClass = {
@@ -24,18 +24,26 @@ function escapeHtml(value) {
     .replaceAll("'", "&#039;");
 }
 
+function renderSummary() {
+  document.getElementById("summary").innerHTML = `
+    <div class="metric"><strong>${state.caseIndex.length}</strong><span>Total Cases</span></div>
+    <div class="metric"><strong>1</strong><span>Case At A Time</span></div>
+    <div class="metric"><strong>LLM</strong><span>On Demand</span></div>
+    <div class="metric"><strong>8770</strong><span>Local Port</span></div>
+  `;
+}
+
 function renderList() {
   const list = document.getElementById("caseList");
-  document.getElementById("caseCount").textContent = `${state.filtered.length} shown`;
-  list.innerHTML = state.filtered
+  document.getElementById("caseCount").textContent = `${state.caseIndex.length} available`;
+  list.innerHTML = state.caseIndex
     .map((item) => {
-      const decision = item.panel_decision.decision;
       const active = item.case_id === state.selectedId ? "active" : "";
       return `
         <button class="case-item ${active}" data-case-id="${item.case_id}">
           <div class="case-row">
             <span class="case-title">${escapeHtml(item.case_id)}</span>
-            ${badge(decision, decisionClass[decision])}
+            ${badge("Load", "low")}
           </div>
           <div class="case-subtitle">${escapeHtml(item.chief_concern)}</div>
           <div class="case-subtitle">${escapeHtml(item.requested_service || "No service request")}</div>
@@ -43,19 +51,6 @@ function renderList() {
       `;
     })
     .join("");
-}
-
-function renderSummary() {
-  const total = state.cases.length;
-  const urgent = state.cases.filter((item) => item.panel_decision.decision === "Urgent Review").length;
-  const follow = state.cases.filter((item) => item.panel_decision.decision === "Needs Follow-Up").length;
-  const human = state.cases.filter((item) => item.human_review.human_review.required).length;
-  document.getElementById("summary").innerHTML = `
-    <div class="metric"><strong>${total}</strong><span>Total Cases</span></div>
-    <div class="metric"><strong>${urgent}</strong><span>Urgent Review</span></div>
-    <div class="metric"><strong>${follow}</strong><span>Needs Follow-Up</span></div>
-    <div class="metric"><strong>${human}</strong><span>Human Review</span></div>
-  `;
 }
 
 function listItems(items, fallback) {
@@ -83,6 +78,18 @@ function renderMedicationFindings(findings) {
     .join("");
 }
 
+function renderMemoryEntries(entries, fallback) {
+  if (!entries || entries.length === 0) {
+    return `<li>${escapeHtml(fallback)}</li>`;
+  }
+  return entries
+    .map((entry) => {
+      const score = entry.score === null || entry.score === undefined ? "" : ` · score ${entry.score}`;
+      return `<li>${badge(entry.source || "memory", "low")}<span class="muted">${escapeHtml(score)}</span><br>${escapeHtml(entry.memory)}</li>`;
+    })
+    .join("");
+}
+
 function agentSection(title, review) {
   return `
     <div class="section">
@@ -93,12 +100,28 @@ function agentSection(title, review) {
   `;
 }
 
+function setLoading(caseId) {
+  document.getElementById("caseDetail").innerHTML = `
+    <div class="empty-state">
+      Running LangGraph review for ${escapeHtml(caseId)}...
+    </div>
+  `;
+}
+
+function renderError(message) {
+  document.getElementById("caseDetail").innerHTML = `
+    <div class="empty-state">${escapeHtml(message)}</div>
+  `;
+}
+
 function renderDetail(item) {
   const detail = document.getElementById("caseDetail");
   const decision = item.panel_decision.decision;
   const route = item.human_review;
   const risk = item.risk_scores;
   const specialists = item.specialists;
+  const memoryContext = item.memory_context || { provider: "none", entries: [] };
+  const memoryWrite = item.memory_write || { provider: "none", entries: [] };
   detail.innerHTML = `
     <div class="detail-header">
       <div>
@@ -130,6 +153,17 @@ function renderDetail(item) {
       <h3>Human Review Route ${badge(route.source || "deterministic", "low")}</h3>
       <p>${escapeHtml(route.human_review.notes || "No human review route required.")}</p>
       <ul>${listItems(route.triggering_agents, "No triggering agents.")}</ul>
+    </div>
+
+    <div class="memory-grid">
+      <div class="section">
+        <h3>Retrieved Memory ${badge(memoryContext.provider || "none", "low")}</h3>
+        <ul>${renderMemoryEntries(memoryContext.entries, "No prior memory matched this case.")}</ul>
+      </div>
+      <div class="section">
+        <h3>Written Memory ${badge(memoryWrite.provider || "none", "low")}</h3>
+        <ul>${renderMemoryEntries(memoryWrite.entries, "No memory was written.")}</ul>
+      </div>
     </div>
 
     <div class="agent-grid">
@@ -166,62 +200,53 @@ function renderDetail(item) {
   `;
 }
 
-function applyFilters() {
-  const search = document.getElementById("searchInput").value.trim().toLowerCase();
-  const decision = document.getElementById("decisionFilter").value;
-  const review = document.getElementById("reviewFilter").value;
-
-  state.filtered = state.cases.filter((item) => {
-    const haystack = [
-      item.case_id,
-      item.chief_concern,
-      item.requested_service,
-      item.diagnoses.join(" "),
-      item.medications.join(" "),
-    ].join(" ").toLowerCase();
-    const matchesSearch = !search || haystack.includes(search);
-    const matchesDecision = decision === "all" || item.panel_decision.decision === decision;
-    const requiresReview = item.human_review.human_review.required;
-    const matchesReview =
-      review === "all" ||
-      (review === "required" && requiresReview) ||
-      (review === "not_required" && !requiresReview);
-    return matchesSearch && matchesDecision && matchesReview;
-  });
-
-  if (!state.filtered.some((item) => item.case_id === state.selectedId)) {
-    state.selectedId = state.filtered[0]?.case_id || null;
+async function loadCase(caseId) {
+  const normalizedCaseId = caseId.trim().toUpperCase();
+  if (!normalizedCaseId) {
+    renderError("Enter a case ID such as HC-007.");
+    return;
   }
 
+  state.selectedId = normalizedCaseId;
   renderList();
-  const selected = state.cases.find((item) => item.case_id === state.selectedId);
-  if (selected) {
-    renderDetail(selected);
-  } else {
-    document.getElementById("caseDetail").innerHTML = '<div class="empty-state">No matching cases.</div>';
+  setLoading(normalizedCaseId);
+
+  const response = await fetch(`/api/case?id=${encodeURIComponent(normalizedCaseId)}`);
+  const payload = await response.json();
+  if (!response.ok) {
+    renderError(payload.error || `Could not load ${normalizedCaseId}.`);
+    return;
   }
+
+  state.selectedCase = payload;
+  document.getElementById("caseIdInput").value = payload.case_id;
+  renderDetail(payload);
 }
 
 async function init() {
   const response = await fetch("/api/cases");
-  state.cases = await response.json();
-  state.filtered = state.cases;
-  state.selectedId = state.cases[0]?.case_id || null;
+  state.caseIndex = await response.json();
   renderSummary();
-  applyFilters();
+  renderList();
+  document.getElementById("caseDetail").innerHTML = `
+    <div class="empty-state">Enter a case ID or select a case to run the review.</div>
+  `;
 
-  document.getElementById("searchInput").addEventListener("input", applyFilters);
-  document.getElementById("decisionFilter").addEventListener("change", applyFilters);
-  document.getElementById("reviewFilter").addEventListener("change", applyFilters);
+  document.getElementById("loadCaseButton").addEventListener("click", () => {
+    loadCase(document.getElementById("caseIdInput").value).catch((error) => renderError(error.message));
+  });
+  document.getElementById("caseIdInput").addEventListener("keydown", (event) => {
+    if (event.key === "Enter") {
+      loadCase(event.target.value).catch((error) => renderError(error.message));
+    }
+  });
   document.getElementById("caseList").addEventListener("click", (event) => {
     const button = event.target.closest(".case-item");
     if (!button) return;
-    state.selectedId = button.dataset.caseId;
-    renderList();
-    renderDetail(state.cases.find((item) => item.case_id === state.selectedId));
+    loadCase(button.dataset.caseId).catch((error) => renderError(error.message));
   });
 }
 
 init().catch((error) => {
-  document.getElementById("caseDetail").innerHTML = `<div class="empty-state">Failed to load dashboard: ${escapeHtml(error.message)}</div>`;
+  renderError(`Failed to load dashboard: ${error.message}`);
 });

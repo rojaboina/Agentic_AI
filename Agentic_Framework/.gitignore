@@ -18,3 +18,4 @@ __pycache__/
 # Dashboard/runtime outputs
 reports/
 tmp/
+data/case_memory.json

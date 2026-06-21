@@ -95,8 +95,9 @@ h3 {
 
 .controls {
   display: grid;
-  grid-template-columns: minmax(260px, 1fr) 190px 180px;
+  grid-template-columns: minmax(260px, 1fr) 140px;
   gap: 12px;
+  align-items: end;
   margin-bottom: 16px;
 }
 
@@ -118,6 +119,22 @@ select {
   background: var(--surface);
   color: var(--text);
   font: inherit;
+}
+
+.load-button {
+  min-height: 42px;
+  border: 1px solid var(--blue);
+  border-radius: 8px;
+  padding: 0 14px;
+  background: var(--blue);
+  color: #ffffff;
+  font: inherit;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.load-button:hover {
+  filter: brightness(0.95);
 }
 
 .layout {
@@ -241,11 +258,16 @@ select {
 }
 
 .score-grid,
-.agent-grid {
+.agent-grid,
+.memory-grid {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 12px;
   margin-top: 16px;
+}
+
+.memory-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
 .score,
@@ -294,11 +316,12 @@ select {
     flex-direction: column;
   }
 
-  .summary,
-  .controls,
-  .layout,
-  .score-grid,
-  .agent-grid {
+    .summary,
+    .controls,
+    .layout,
+    .score-grid,
+    .agent-grid,
+    .memory-grid {
     grid-template-columns: 1fr;
   }
 

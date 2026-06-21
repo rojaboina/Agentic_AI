@@ -8,6 +8,7 @@ from app.extractor import extract_all_cases
 from app.guidelines import run_guideline_checks
 from app.human_review import route_human_review_from_outputs
 from app.medication_safety import run_medication_safety_checks
+from app.memory import retrieve_case_memory, write_case_memory
 from app.panel_decision import make_panel_decision_from_outputs
 from app.risk_scoring import calculate_risk_scores
 from app.schemas import ClinicalExtraction
@@ -19,9 +20,11 @@ class CaseReviewState(TypedDict, total=False):
     guideline_result: Any
     medication_safety_result: Any
     risk_scores: Any
+    memory_context: Any
     specialist_bundle: Any
     human_route: Any
     panel_decision: Any
+    memory_write: Any
 
 
 def guideline_node(state: CaseReviewState) -> CaseReviewState:
@@ -45,8 +48,17 @@ def risk_scoring_node(state: CaseReviewState) -> CaseReviewState:
     }
 
 
+def memory_retrieval_node(state: CaseReviewState) -> CaseReviewState:
+    return {"memory_context": retrieve_case_memory(state["extraction"])}
+
+
 def specialist_agents_node(state: CaseReviewState) -> CaseReviewState:
-    return {"specialist_bundle": run_specialist_agents(state["extraction"])}
+    return {
+        "specialist_bundle": run_specialist_agents(
+            state["extraction"],
+            state.get("memory_context"),
+        )
+    }
 
 
 def human_review_node(state: CaseReviewState) -> CaseReviewState:
@@ -74,22 +86,40 @@ def panel_decision_node(state: CaseReviewState) -> CaseReviewState:
     }
 
 
+def memory_write_node(state: CaseReviewState) -> CaseReviewState:
+    return {
+        "memory_write": write_case_memory(
+            state["extraction"],
+            state["guideline_result"],
+            state["medication_safety_result"],
+            state["risk_scores"],
+            state["specialist_bundle"],
+            state["human_route"],
+            state["panel_decision"],
+        )
+    }
+
+
 def build_case_review_graph():
     graph = StateGraph(CaseReviewState)
     graph.add_node("guidelines", guideline_node)
     graph.add_node("medication_safety", medication_safety_node)
     graph.add_node("risk_scoring", risk_scoring_node)
+    graph.add_node("memory_retrieval", memory_retrieval_node)
     graph.add_node("specialist_agents", specialist_agents_node)
     graph.add_node("human_review", human_review_node)
     graph.add_node("panel_decision", panel_decision_node)
+    graph.add_node("memory_write", memory_write_node)
 
     graph.set_entry_point("guidelines")
     graph.add_edge("guidelines", "medication_safety")
     graph.add_edge("medication_safety", "risk_scoring")
-    graph.add_edge("risk_scoring", "specialist_agents")
+    graph.add_edge("risk_scoring", "memory_retrieval")
+    graph.add_edge("memory_retrieval", "specialist_agents")
     graph.add_edge("specialist_agents", "human_review")
     graph.add_edge("human_review", "panel_decision")
-    graph.add_edge("panel_decision", END)
+    graph.add_edge("panel_decision", "memory_write")
+    graph.add_edge("memory_write", END)
     return graph.compile()
 
 

@@ -12,6 +12,7 @@ from app.schemas import (
     ClinicalExtraction,
     ClinicalRiskAnalysis,
     GuidelineResult,
+    MemoryContext,
     MedicationSafetyResult,
     RiskScores,
     SpecialistReview,
@@ -171,6 +172,7 @@ def try_llm_clinical_risk_agent(
     guideline_result: GuidelineResult,
     medication_safety_result: MedicationSafetyResult,
     risk_scores: RiskScores,
+    memory_context: MemoryContext | None = None,
 ) -> ClinicalRiskAnalysis | None:
     try:
         return build_llm_clinical_risk_agent(
@@ -178,6 +180,7 @@ def try_llm_clinical_risk_agent(
             guideline_result,
             medication_safety_result,
             risk_scores,
+            memory_context,
         )
     except Exception:
         return None
@@ -190,6 +193,7 @@ def try_llm_specialist_review(
     guideline_result: GuidelineResult,
     medication_safety_result: MedicationSafetyResult,
     risk_scores: RiskScores,
+    memory_context: MemoryContext | None = None,
 ) -> SpecialistReview | None:
     try:
         return build_llm_specialist_review(
@@ -199,12 +203,16 @@ def try_llm_specialist_review(
             guideline_result,
             medication_safety_result,
             risk_scores,
+            memory_context,
         )
     except Exception:
         return None
 
 
-def run_specialist_agents(extraction: ClinicalExtraction) -> SpecialistReviewBundle:
+def run_specialist_agents(
+    extraction: ClinicalExtraction,
+    memory_context: MemoryContext | None = None,
+) -> SpecialistReviewBundle:
     guideline_result = run_guideline_checks(extraction)
     medication_safety_result = run_medication_safety_checks(extraction)
     risk_scores = calculate_risk_scores(
@@ -218,6 +226,7 @@ def run_specialist_agents(extraction: ClinicalExtraction) -> SpecialistReviewBun
         guideline_result,
         medication_safety_result,
         risk_scores,
+        memory_context,
     ) or build_clinical_risk_agent(
         extraction,
         guideline_result,
@@ -234,6 +243,7 @@ def run_specialist_agents(extraction: ClinicalExtraction) -> SpecialistReviewBun
         guideline_result,
         medication_safety_result,
         risk_scores,
+        memory_context,
     ) or build_medication_safety_agent(
         medication_safety_result,
         risk_scores,
@@ -248,6 +258,7 @@ def run_specialist_agents(extraction: ClinicalExtraction) -> SpecialistReviewBun
         guideline_result,
         medication_safety_result,
         risk_scores,
+        memory_context,
     ) or build_care_management_agent(extraction, risk_scores)
     service_review = try_llm_specialist_review(
         "Service Review Agent",
@@ -259,6 +270,7 @@ def run_specialist_agents(extraction: ClinicalExtraction) -> SpecialistReviewBun
         guideline_result,
         medication_safety_result,
         risk_scores,
+        memory_context,
     ) or build_service_review_agent(
         extraction,
         guideline_result,

@@ -7,7 +7,9 @@ from app.llm_specialist_agents import compact_case_context, invoke_structured_ll
 from app.schemas import (
     ClinicalExtraction,
     GuidelineResult,
+    HumanReview,
     HumanReviewRoute,
+    HumanReviewRouteDraft,
     MedicationSafetyResult,
     RiskScores,
     SpecialistReviewBundle,
@@ -22,17 +24,38 @@ def compact_routing_context(
     specialist_bundle: SpecialistReviewBundle,
     deterministic_route: HumanReviewRoute,
 ) -> str:
-    base_context = json.loads(
-        compact_case_context(
-            extraction,
-            guideline_result,
-            medication_safety_result,
-            risk_scores,
-        )
-    )
-    base_context["specialist_reviews"] = specialist_bundle.model_dump()
-    base_context["deterministic_route"] = deterministic_route.model_dump()
-    return json.dumps(base_context, indent=2)
+    patient_case = extraction.patient_case
+    payload = {
+        "case_id": extraction.case_id,
+        "case_summary": {
+            "age": patient_case.patient_age,
+            "chief_concern": patient_case.chief_concern,
+            "diagnoses": patient_case.diagnoses,
+            "medications": patient_case.medications,
+            "requested_service": patient_case.requested_service,
+        },
+        "scores": {
+            "overall": risk_scores.overall_risk,
+            "medication": risk_scores.medication_safety_risk,
+            "care_gap": risk_scores.care_gap_risk,
+        },
+        "high_flags": [flag.code for flag in guideline_result.flags if flag.severity == "high"],
+        "medication_issues": [finding.issue for finding in medication_safety_result.findings],
+        "specialist_summaries": {
+            "clinical_risk": {"severity": specialist_bundle.clinical_risk.severity, "summary": specialist_bundle.clinical_risk.summary, "source": specialist_bundle.clinical_risk.source},
+            "medication_safety": {"severity": specialist_bundle.medication_safety.severity, "summary": specialist_bundle.medication_safety.summary, "needs_human_review": specialist_bundle.medication_safety.needs_human_review, "source": specialist_bundle.medication_safety.source},
+            "care_management": {"severity": specialist_bundle.care_management.severity, "summary": specialist_bundle.care_management.summary, "needs_human_review": specialist_bundle.care_management.needs_human_review, "source": specialist_bundle.care_management.source},
+            "service_review": {"severity": specialist_bundle.service_review.severity, "summary": specialist_bundle.service_review.summary, "needs_human_review": specialist_bundle.service_review.needs_human_review, "source": specialist_bundle.service_review.source},
+        },
+        "deterministic_route": {
+            "required": deterministic_route.human_review.required,
+            "reviewer_role": deterministic_route.human_review.reviewer_role,
+            "urgency": deterministic_route.urgency,
+            "routing_reasons": deterministic_route.routing_reasons,
+            "triggering_agents": deterministic_route.triggering_agents,
+        },
+    }
+    return json.dumps(payload, separators=(",", ":"))
 
 
 def build_llm_human_review_route(
@@ -51,8 +74,8 @@ def build_llm_human_review_route(
         specialist_bundle,
         deterministic_route,
     )
-    route = invoke_structured_llm(
-        HumanReviewRoute,
+    draft = invoke_structured_llm(
+        HumanReviewRouteDraft,
         "Human Review Router",
         (
             "Decide whether this case needs human review, the best reviewer role, urgency, "
@@ -62,7 +85,18 @@ def build_llm_human_review_route(
         ),
         context,
     )
-    if route is not None:
-        route.case_id = extraction.case_id
-        route.source = "llm"
-    return route
+    if draft is None:
+        return None
+    return HumanReviewRoute(
+        case_id=extraction.case_id,
+        human_review=HumanReview(
+            required=draft.required,
+            reviewer_role=draft.reviewer_role,
+            reviewer_decision=None,
+            notes=draft.notes,
+        ),
+        routing_reasons=draft.routing_reasons,
+        triggering_agents=draft.triggering_agents,
+        urgency=draft.urgency,
+        source="llm",
+    )

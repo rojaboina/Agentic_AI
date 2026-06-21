@@ -18,27 +18,10 @@
 
       <section class="controls" aria-label="Dashboard controls">
         <label>
-          <span>Search</span>
-          <input id="searchInput" type="search" placeholder="Case, concern, service, diagnosis">
+          <span>Case ID</span>
+          <input id="caseIdInput" type="search" placeholder="Example: HC-007">
         </label>
-        <label>
-          <span>Decision</span>
-          <select id="decisionFilter">
-            <option value="all">All decisions</option>
-            <option value="Urgent Review">Urgent Review</option>
-            <option value="Needs Follow-Up">Needs Follow-Up</option>
-            <option value="Routine">Routine</option>
-            <option value="Insufficient Data">Insufficient Data</option>
-          </select>
-        </label>
-        <label>
-          <span>Reviewer</span>
-          <select id="reviewFilter">
-            <option value="all">All routes</option>
-            <option value="required">Human review</option>
-            <option value="not_required">No human review</option>
-          </select>
-        </label>
+        <button class="load-button" id="loadCaseButton" type="button">Load Case</button>
       </section>
 
       <section class="layout">

@@ -134,6 +134,35 @@ class HumanReviewRoute(BaseModel):
     source: str = "deterministic"
 
 
+class HumanReviewRouteDraft(BaseModel):
+    required: bool
+    reviewer_role: Optional[str] = None
+    notes: Optional[str] = None
+    routing_reasons: list[str] = Field(default_factory=list)
+    triggering_agents: list[str] = Field(default_factory=list)
+    urgency: RiskLevel
+
+
+class ClinicalPanelDecisionDraft(BaseModel):
+    decision: Decision
+    confidence: float = Field(ge=0.0, le=1.0)
+    rationale: str
+    recommended_actions: list[str] = Field(default_factory=list)
+    escalate_to_human: bool
+
+
+class MemoryEntry(BaseModel):
+    memory: str
+    source: str
+    score: Optional[float] = None
+    metadata: dict = Field(default_factory=dict)
+
+
+class MemoryContext(BaseModel):
+    provider: str = "none"
+    entries: list[MemoryEntry] = Field(default_factory=list)
+
+
 class FinalReport(BaseModel):
     case_id: str
     patient_case: PatientCase
