@@ -202,33 +202,6 @@ Browser dashboard for audit trail
 
 Mermaid version:
 
-```mermaid
-flowchart TD
-    A["Synthetic Patient Cases"] --> B["Pydantic Validation and Extractor"]
-    B --> C["LangGraph StateGraph"]
-    C --> D["Guideline Rules"]
-    D --> E["Medication Safety Rules"]
-    E --> F["Risk Scoring"]
-    F --> G["Mem0 Memory Retrieval"]
-    G --> H["Specialist Agents"]
-    H --> H1["Clinical Risk Agent"]
-    H --> H2["Medication Safety Agent"]
-    H --> H3["Care Management Agent"]
-    H --> H4["Service Review Agent"]
-    H1 --> I["Human Review Router"]
-    H2 --> I
-    H3 --> I
-    H4 --> I
-    I --> J["Panel Decision Agent"]
-    J --> K["Mem0 Memory Write"]
-    K --> L["Dashboard API"]
-    L --> M["Browser Dashboard"]
-    N["Groq API"] -.-> H
-    N -.-> I
-    N -.-> J
-    O["Mem0"] -.-> G
-    O -.-> K
-```
 
 Plain-text version:
 
@@ -236,10 +209,10 @@ Plain-text version:
 Synthetic Patient Cases
         |
         v
-Pydantic PatientCase Validation
+Pydantic Validation
         |
         v
-Extractor
+Clinical Extractor
 normalize case, labs, vitals, medications, note signals
         |
         v
@@ -247,56 +220,55 @@ LangGraph StateGraph
 shared CaseReviewState
         |
         v
-+----------------------+------------------------+
-|                      |                        |
-v                      v                        v
-Guideline Rules        Medication Safety        Risk Scoring
-deterministic          deterministic            numeric risk scores
-        |                      |                        |
-        +----------------------+------------------------+
-                               |
-                               v
-Memory Retrieval
-Mem0 if configured, local JSON fallback
-prior similar decisions and reviewer patterns
-                               |
-                               v
-Specialist Agents
-Groq LLM when configured, deterministic fallback otherwise
-retrieved memory is advisory context
+Deterministic Safety Layer
++--------------------+------------------------+--------------------+
+| Guideline Rules    | Medication Safety      | Risk Scoring       |
+| deterministic      | deterministic          | numeric scores     |
++--------------------+------------------------+--------------------+
         |
-        +--> Clinical Risk Agent
-        +--> Medication Safety Agent
-        +--> Care Management Agent
-        +--> Service Review Agent
+        v
+Mem0 Memory Retrieval
+retrieve similar prior case patterns and reviewer history
+        |
+        v
+Specialist Agent Panel
++------------------------+----------------------------+
+| Clinical Risk Agent    | Medication Safety Agent     |
+| Care Management Agent  | Service Review Agent        |
++------------------------+----------------------------+
         |
         v
 Human Review Router
-LLM route + deterministic safety baseline + routing guardrails
-chooses clinician, pharmacist, care manager, or clinical reviewer
+chooses clinician, clinical pharmacist, care manager, or clinical reviewer
         |
         v
-Panel Decision
-LLM panel decision + deterministic safety baseline + panel guardrails
+Panel Decision Agent
+combines specialist outputs, risk scores, route, and memory context
         |
         v
-Memory Write
-store final case pattern, risk signals, route, and panel decision
+Guardrails
+prevent unsafe downgrade of high-risk or mandatory-review cases
         |
         v
 Final Case Decision JSON
         |
         v
-Dashboard API /api/cases and /api/case?id=...
+Mem0 Memory Write
+store finalized case pattern, risk signals, reviewer role, and decision
         |
         v
-Browser UI Dashboard
-case list, decision trail, risk scores, routing, agent outputs, memory trace
+Dashboard API
+/api/cases and /api/case?id=...
+        |
+        v
+Browser Dashboard
+case list, risk scores, LLM badges, reviewer route, memory trace
 
-.env provides GROQ_API_KEY for LLM calls and MEM0_API_KEY for memory. OpenAI and Ollama remain optional provider paths.
-.gitignore protects .env from being committed.
+External services:
+- Groq provides LLM calls for specialist agents, human router, and panel decision.
+- Mem0 provides long-term case memory retrieval and write-back.
+- .env stores GROQ_API_KEY and MEM0_API_KEY; .gitignore protects secrets.
 ```
-
 
 ## Core Flow
 
