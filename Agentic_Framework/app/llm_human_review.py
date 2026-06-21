@@ -54,6 +54,12 @@ def compact_routing_context(
             "routing_reasons": deterministic_route.routing_reasons,
             "triggering_agents": deterministic_route.triggering_agents,
         },
+        "reviewer_role_guidance": {
+            "clinician": "Use when overall clinical risk, acute symptoms, abnormal labs, or clinical deterioration is the dominant concern.",
+            "clinical pharmacist": "Use when medication safety, renal dosing, allergy conflict, anticoagulation, or drug interaction risk is the dominant concern.",
+            "care manager": "Use when adherence, access barriers, missed follow-up, social needs, or care gaps are the dominant concern.",
+            "clinical reviewer": "Use when requested service, authorization, documentation, or utilization review is the dominant concern.",
+        },
     }
     return json.dumps(payload, separators=(",", ":"))
 
@@ -81,7 +87,9 @@ def build_llm_human_review_route(
             "Decide whether this case needs human review, the best reviewer role, urgency, "
             "routing reasons, and triggering agents. You may refine the deterministic route, "
             "but do not downgrade high-risk or mandatory review cases. If deterministic_route "
-            "requires review, your output must also require review."
+            "requires review, your output must also require review. Choose the reviewer role "
+            "from the dominant specialist signal; do not default to clinical pharmacist unless "
+            "medication safety is the main reason for review."
         ),
         context,
     )
