@@ -28,7 +28,7 @@ Ingests healthcare documents and structured data such as:
 
 ### 2. Clinical Extractor
 
-Uses an LLM with structured output to convert messy clinical text into a validated schema.
+Uses deterministic Python extraction and Pydantic validation to normalize synthetic case records into a clean schema. In a production version, this same step could be extended with LLM-assisted extraction for messy source documents.
 
 Example schema:
 
@@ -187,18 +187,48 @@ Recommended stack:
 ```text
 Python
 LangGraph
-Pydantic structured outputs
-SQLite or Postgres for state
+Pydantic schemas and structured outputs
+Synthetic JSON dataset
 Pure Python rules engine
 Tool functions for risk scoring
-LLM agents for interpretation
-Human-in-the-loop review
-Mem0 or local JSON memory
-Checkpointing / audit logs
-Markdown or PDF report output
+Groq-backed LLM agents for interpretation
+Human-in-the-loop routing
+Mem0 long-term memory with local JSON fallback
+Python stdlib dashboard API
+Browser dashboard for audit trail
 ```
 
 ## Architecture Diagram
+
+Mermaid version:
+
+```mermaid
+flowchart TD
+    A["Synthetic Patient Cases"] --> B["Pydantic Validation and Extractor"]
+    B --> C["LangGraph StateGraph"]
+    C --> D["Guideline Rules"]
+    D --> E["Medication Safety Rules"]
+    E --> F["Risk Scoring"]
+    F --> G["Mem0 Memory Retrieval"]
+    G --> H["Specialist Agents"]
+    H --> H1["Clinical Risk Agent"]
+    H --> H2["Medication Safety Agent"]
+    H --> H3["Care Management Agent"]
+    H --> H4["Service Review Agent"]
+    H1 --> I["Human Review Router"]
+    H2 --> I
+    H3 --> I
+    H4 --> I
+    I --> J["Panel Decision Agent"]
+    J --> K["Mem0 Memory Write"]
+    K --> L["Dashboard API"]
+    L --> M["Browser Dashboard"]
+    N["Groq API"] -.-> H
+    N -.-> I
+    N -.-> J
+    O["Mem0"] -.-> G
+    O -.-> K
+```
 
 Plain-text version:
 
@@ -232,7 +262,8 @@ prior similar decisions and reviewer patterns
                                |
                                v
 Specialist Agents
-LLM if provider key exists, deterministic fallback otherwise
+Groq LLM when configured, deterministic fallback otherwise
+retrieved memory is advisory context
         |
         +--> Clinical Risk Agent
         +--> Medication Safety Agent
@@ -241,11 +272,12 @@ LLM if provider key exists, deterministic fallback otherwise
         |
         v
 Human Review Router
-deterministic route + optional LLM route + routing guardrails
+LLM route + deterministic safety baseline + routing guardrails
+chooses clinician, pharmacist, care manager, or clinical reviewer
         |
         v
 Panel Decision
-deterministic decision + optional LLM decision + panel guardrails
+LLM panel decision + deterministic safety baseline + panel guardrails
         |
         v
 Memory Write
@@ -255,13 +287,13 @@ store final case pattern, risk signals, route, and panel decision
 Final Case Decision JSON
         |
         v
-Dashboard API /api/cases
+Dashboard API /api/cases and /api/case?id=...
         |
         v
 Browser UI Dashboard
-case list, decision trail, risk scores, routing, agent outputs
+case list, decision trail, risk scores, routing, agent outputs, memory trace
 
-.env provides optional GROQ_API_KEY, OPENAI_API_KEY, or MEM0_API_KEY.
+.env provides GROQ_API_KEY for LLM calls and MEM0_API_KEY for memory. OpenAI and Ollama remain optional provider paths.
 .gitignore protects .env from being committed.
 ```
 
@@ -272,26 +304,25 @@ case list, decision trail, risk scores, routing, agent outputs
 1. Ingest patient record.
 2. Extract structured patient data.
 3. Run deterministic guideline and policy checks.
-4. Run clinical risk analysis.
-5. Run medication safety analysis.
-6. Run tool-based risk scoring.
-7. Retrieve relevant prior case memory.
-8. Run LLM specialist agents with current case context plus retrieved memory.
-9. Escalate to human clinician if needed.
-10. Generate the panel decision.
-11. Store the finalized case pattern back into memory.
-12. Generate auditable care summary.
+4. Run deterministic medication safety checks.
+5. Run tool-based risk scoring.
+6. Retrieve relevant prior case memory from Mem0.
+7. Run specialist agents with current case context plus retrieved memory.
+8. Run the human review router to choose reviewer role and urgency.
+9. Generate the guarded panel decision.
+10. Store the finalized case pattern back into Mem0.
+11. Display the auditable decision trail in the dashboard.
 ```
 
 ## Design Decisions
 
-### Parallel Specialists Instead of Sequential Chain
+### Graph Nodes Instead of One Big Chain
 
-Clinical risk, medication safety, and guideline checks can run independently after extraction. Running them in parallel reduces wall-clock time.
+LangGraph separates the workflow into explicit nodes: guideline checks, medication safety, risk scoring, memory retrieval, specialist agents, human review routing, panel decision, and memory write. This makes the decision trail easier to debug and explain.
 
-### Pydantic Structured Output Instead of Regex
+### Pydantic Structured Output Instead of Free Text
 
-Clinical extraction should return validated structured data. Regex parsing is fragile and unsafe for messy clinical text.
+LLM outputs are validated with Pydantic models. This keeps agent responses machine-readable and prevents the dashboard from depending on fragile free-form text parsing.
 
 ### Deterministic Rules for Safety and Policy
 
@@ -307,12 +338,14 @@ High-risk, low-confidence, or safety-critical cases should pause for clinician r
 
 ### Memory as Advisory Context
 
-Memory is used to recall prior case patterns, reviewer preferences, and finalized decisions. It does not replace current case data, deterministic safety checks, or panel guardrails.
+Memory is used to recall prior case patterns, reviewer preferences, and finalized decisions. It is retrieved before the specialist agents and written after the panel decision. It does not replace current case data, deterministic safety checks, or panel guardrails.
 
 The implementation supports:
 
 - `MEMORY_PROVIDER=local` for a demo-friendly JSON memory store
 - `MEMORY_PROVIDER=mem0` for Mem0-backed long-term memory when `MEM0_API_KEY` is configured
+
+Current demo configuration uses `MEMORY_PROVIDER=mem0` and `MEM0_USER_ID=roja-healthcare-demo`.
 
 ### Auditability
 
