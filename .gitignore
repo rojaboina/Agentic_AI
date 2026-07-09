@@ -1,0 +1,23 @@
+.DS_Store
+**/.DS_Store
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+env/
+
+# Local environment and secrets
+.env
+*.env
+!.env.example
+
+# Node/local build artifacts
+node_modules/
+dist/
+build/
+
+# Generated previews / local outputs
+outputs/
+*.inspect.ndjson
