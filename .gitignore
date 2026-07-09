@@ -21,3 +21,6 @@ build/
 # Generated previews / local outputs
 outputs/
 *.inspect.ndjson
+
+# Supabase-backed generated patient PDFs
+Final_Project/sample_patient_data/

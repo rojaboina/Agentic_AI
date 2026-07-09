@@ -1,13 +1,16 @@
 # Patient Health RAG Pipeline
 
-This pipeline reads local patient PDFs, extracts text, chunks lab results by panel and metric, embeds each chunk, and stores the vectors in Pinecone.
+This pipeline keeps original patient PDFs in Supabase Storage, syncs them into a local cache when needed, extracts text, chunks lab results by panel and metric, embeds each chunk, and stores the vectors in Pinecone.
 
 ## Flow
 
 ```text
-sample_patient_data/
+Supabase Storage: patient-pdfs/
   P001_Ava_Patel/lab_results_2022.pdf ... lab_results_2026.pdf
   P002_Michael_Johnson/lab_results_2022.pdf ... lab_results_2026.pdf
+        |
+        v
+local PDF cache: sample_patient_data/
         |
         v
 pypdf text extraction
@@ -70,6 +73,28 @@ export PINECONE_API_KEY="your_key"
 export PINECONE_INDEX_NAME="patient-health-rag"
 export PINECONE_CLOUD="aws"
 export PINECONE_REGION="us-east-1"
+```
+
+For Supabase PDF storage:
+
+```bash
+export SUPABASE_URL="https://your-project-ref.supabase.co"
+export SUPABASE_SERVICE_ROLE_KEY="your_service_role_key"
+export SUPABASE_STORAGE_BUCKET="patient-pdfs"
+```
+
+## Sync PDFs From Supabase
+
+The generated PDFs are not stored in Git. Restore the local PDF cache from Supabase before ingestion or local chatbot scans:
+
+```bash
+python download_pdfs_from_supabase.py
+```
+
+To upload or refresh the PDFs in Supabase:
+
+```bash
+python upload_pdfs_to_supabase.py --create-bucket
 ```
 
 ## Dry Run
