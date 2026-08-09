@@ -1,0 +1,34 @@
+{
+  "patient_id": "P004",
+  "profile": {
+    "full_name": "Daniel Kim",
+    "date_of_birth": "1998-11-11",
+    "gender": "Male",
+    "height": "5 ft 9 in",
+    "weight": "168 lb",
+    "blood_pressure": "118",
+    "current_health_status": "bad",
+    "patient_id": "P004",
+    "existing_conditions": "Diabetes",
+    "medications": ""
+  },
+  "documents": [
+    {
+      "file_name": "lab_results_2022.pdf",
+      "size_bytes": 24265
+    },
+    {
+      "file_name": "lab_results_2023.pdf",
+      "size_bytes": 24308
+    },
+    {
+      "file_name": "lab_results_2024.pdf",
+      "size_bytes": 24295
+    },
+    {
+      "file_name": "lab_results_2025.pdf",
+      "size_bytes": 24346
+    }
+  ],
+  "verification_status": "ready_for_document_processing"
+}

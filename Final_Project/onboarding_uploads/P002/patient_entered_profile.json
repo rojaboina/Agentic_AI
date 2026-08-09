@@ -1,0 +1,38 @@
+{
+  "patient_id": "P002",
+  "profile": {
+    "full_name": "Michael Johnson",
+    "date_of_birth": "1993-11-11",
+    "gender": "Male",
+    "height": "5 ft 10 in",
+    "weight": "214 lb",
+    "blood_pressure": "118",
+    "current_health_status": "okay",
+    "patient_id": "P002",
+    "existing_conditions": "Diabetes",
+    "medications": ""
+  },
+  "documents": [
+    {
+      "file_name": "lab_results_2022_1.pdf",
+      "size_bytes": 24305
+    },
+    {
+      "file_name": "lab_results_2023_1.pdf",
+      "size_bytes": 24162
+    },
+    {
+      "file_name": "lab_results_2024_1.pdf",
+      "size_bytes": 24309
+    },
+    {
+      "file_name": "lab_results_2025_1.pdf",
+      "size_bytes": 24280
+    },
+    {
+      "file_name": "lab_results_2026_1.pdf",
+      "size_bytes": 24327
+    }
+  ],
+  "verification_status": "ready_for_document_processing"
+}

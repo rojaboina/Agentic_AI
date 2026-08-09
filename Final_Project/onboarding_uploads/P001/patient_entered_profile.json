@@ -1,0 +1,22 @@
+{
+  "patient_id": "P001",
+  "profile": {
+    "full_name": "Ava Patel",
+    "date_of_birth": "1998-11-11",
+    "gender": "Female",
+    "height": "5 ft 5 in",
+    "weight": "134 lb",
+    "blood_pressure": "118",
+    "current_health_status": "cough",
+    "patient_id": "P001",
+    "existing_conditions": "hypertension",
+    "medications": ""
+  },
+  "documents": [
+    {
+      "file_name": "lab_results_2024.pdf",
+      "size_bytes": 24271
+    }
+  ],
+  "verification_status": "ready_for_document_processing"
+}
